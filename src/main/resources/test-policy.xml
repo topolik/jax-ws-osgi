@@ -1,0 +1,55 @@
+<wsp:Policy
+        wsu:Id="TestPolicy"
+        xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+        xmlns:wssp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702"
+        xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/ws-securitypolicy.xsd">
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <http-conf:server CacheControl="no-cache" ServerType="Liferay Server" />
+            <wssp:AsymmetricBinding>
+                <wsp:Policy>
+                    <!--<sp:InitiatorToken>-->
+                        <!--<wsp:Policy>-->
+                            <!--<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:WssX509V3Token11 />-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:X509Token>-->
+                        <!--</wsp:Policy>-->
+                    <!--</sp:InitiatorToken>-->
+                    <!--<sp:RecipientToken>-->
+                        <!--<wsp:Policy>-->
+                            <!--<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:WssX509V3Token11 />-->
+                                    <!--<sp:RequireIssuerSerialReference />-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:X509Token>-->
+                        <!--</wsp:Policy>-->
+                    <!--</sp:RecipientToken>-->
+                    <!--<sp:Layout>-->
+                        <!--<wsp:Policy>-->
+                            <!--<sp:Strict />-->
+                        <!--</wsp:Policy>-->
+                    <!--</sp:Layout>-->
+                    <wssp:IncludeTimestamp />
+                    <wssp:OnlySignEntireHeadersAndBody />
+                    <wssp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <wssp:Basic128 />
+                        </wsp:Policy>
+                    </wssp:AlgorithmSuite>
+                    <wssp:EncryptSignature />
+                </wsp:Policy>
+            </wssp:AsymmetricBinding>
+            <wssp:Wss11>
+                <wsp:Policy>
+                    <wssp:MustSupportRefIssuerSerial />
+                </wsp:Policy>
+            </wssp:Wss11>
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>

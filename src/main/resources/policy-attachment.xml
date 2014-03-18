@@ -1,0 +1,18 @@
+<attachments xmlns:lfr="http://liferay.com/2014/04/addressing"
+             xmlns:wsa="http://www.w3.org/2005/08/addressing"
+             xmlns:wsp="http://www.w3.org/ns/ws-policy"
+             xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+
+    <wsp:PolicyAttachment>
+        <wsp:AppliesTo>
+            <lfr:RegularExpressionEndpointReference>
+                ^/service$
+            </lfr:RegularExpressionEndpointReference>
+            <lfr:RegularExpressionEndpointReference>
+                ^/service2$
+            </lfr:RegularExpressionEndpointReference>
+        </wsp:AppliesTo>
+        <wsp:PolicyReference URI="/test-policy.xml" />
+    </wsp:PolicyAttachment>
+
+</attachments>
