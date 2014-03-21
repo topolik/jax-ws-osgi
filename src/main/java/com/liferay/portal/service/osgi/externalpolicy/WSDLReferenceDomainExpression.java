@@ -7,6 +7,7 @@ import org.apache.cxf.service.model.EndpointInfo;
 import org.apache.cxf.service.model.ServiceInfo;
 import org.apache.cxf.ws.policy.attachment.external.DomainExpression;
 
+import javax.xml.namespace.QName;
 import java.util.regex.Pattern;
 
 /**
@@ -14,43 +15,78 @@ import java.util.regex.Pattern;
  */
 public class WSDLReferenceDomainExpression implements DomainExpression {
 	private Pattern _endpointRegExp;
+	private QName serviceReference;
+	private QName endpointReference;
+	private QName bindingOperationReference;
+	private QName bindingMessageReference;
+	private QName bindingFaultReference;
 
-	public WSDLReferenceDomainExpression(Pattern _endpointRegExp) {
-		this._endpointRegExp = _endpointRegExp;
+	public WSDLReferenceDomainExpression() {
 	}
 
 	@Override
 	public boolean appliesTo(BindingFaultInfo bfi) {
-		return false;
+		return bfi.getFaultInfo().getOperation().getInterface().getName().equals(getBindingFaultReference());
 	}
 
 	@Override
 	public boolean appliesTo(BindingMessageInfo bmi) {
-		return false; // LiferayWSPolicyFeature:37
+		return bmi.getMessageInfo().getOperation().getInterface().getName().equals(getBindingMessageReference());
 	}
 
 	@Override
 	public boolean appliesTo(BindingOperationInfo boi) {
-		return false; // LiferayWSPolicyFeature:37
+		return boi.getOperationInfo().getInterface().getName().equals(getBindingOperationReference());
 	}
 
 	@Override
 	public boolean appliesTo(EndpointInfo ei) {
-		return _endpointRegExp.matcher(ei.getAddress()).matches(); // EndpointPolicyImpl:151
+//		return _endpointRegExp.matcher(ei.getAddress()).matches(); // EndpointPolicyImpl:151
+		return ei.getInterface().getName().equals(getEndpointReference());
 	}
 
 	@Override
 	public boolean appliesTo(ServiceInfo si) {
-		return false; // EndpointPolicyImpl:150
+		return si.getInterface().getName().equals(getServiceReference());
 	}
 
-	private String _endpointAddress;
-	private Pattern _endpointAddressRE;
+	public void setServiceReference(QName serviceReference) {
+		this.serviceReference = serviceReference;
+	}
 
-	private String _serviceName;
-	private Pattern _serviceNameRE;
+	public QName getServiceReference() {
+		return serviceReference;
+	}
 
-	private String _bindingOperation;
-	private Pattern _bindingOperationRE;
+	public void setEndpointReference(QName endpointReference) {
+		this.endpointReference = endpointReference;
+	}
 
+	public QName getEndpointReference() {
+		return endpointReference;
+	}
+
+	public void setBindingOperationReference(QName bindingOperationReference) {
+		this.bindingOperationReference = bindingOperationReference;
+	}
+
+	public QName getBindingOperationReference() {
+		return bindingOperationReference;
+	}
+
+	public void setBindingMessageReference(QName bindingMessageReference) {
+		this.bindingMessageReference = bindingMessageReference;
+	}
+
+	public QName getBindingMessageReference() {
+		return bindingMessageReference;
+	}
+
+	public void setBindingFaultReference(QName bindingFaultReference) {
+		this.bindingFaultReference = bindingFaultReference;
+	}
+
+	public QName getBindingFaultReference() {
+		return bindingFaultReference;
+	}
 }

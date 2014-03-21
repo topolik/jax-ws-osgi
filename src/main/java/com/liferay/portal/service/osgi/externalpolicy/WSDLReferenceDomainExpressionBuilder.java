@@ -3,11 +3,12 @@ package com.liferay.portal.service.osgi.externalpolicy;
 import org.apache.cxf.ws.policy.attachment.external.DomainExpression;
 import org.apache.cxf.ws.policy.attachment.external.DomainExpressionBuilder;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
@@ -27,32 +28,32 @@ public class WSDLReferenceDomainExpressionBuilder implements DomainExpressionBui
 		new QName("http://liferay.com/2014/04/addressing", "BindingMessage");
 
 	private static final QName BINDING_FAULT_REFERENCE =
-		new QName("http://liferay.com/2014/04/addressing", "BindinFault");
+		new QName("http://liferay.com/2014/04/addressing", "BindingFault");
 
 	private static final Collection<QName> SUPPORTED_TYPES = Arrays.asList(
 		SERVICE_REFERENCE, ENDPOINT_REFERENCE, BINDING_OPERATION_REFERENCE,
-		BINDING_MESSAGE_REFERENCE,BINDING_FAULT_REFERENCE);
+		BINDING_MESSAGE_REFERENCE, BINDING_FAULT_REFERENCE);
 
 	@Override
 	public DomainExpression build(Element e) {
-		QName name = new QName(e.getNamespaceURI(), e.getLocalName());
+		QName referenceType = new QName(e.getNamespaceURI(), e.getLocalName());
 
-		WSDLReferenceDomainExpression expression = null;
+		WSDLReferenceDomainExpression expression = new WSDLReferenceDomainExpression();
 
-		if (name.equals(SERVICE_REFERENCE)) {
-			expression = buildServiceReference(e);
+		if (referenceType.equals(SERVICE_REFERENCE)) {
+			buildServiceReference(e, expression);
 		}
-		if (name.equals(ENDPOINT_REFERENCE)) {
-			expression = buildEndpointReference(e);
+		if (referenceType.equals(ENDPOINT_REFERENCE)) {
+			buildEndpointReference(e, expression);
 		}
-		if (name.equals(BINDING_OPERATION_REFERENCE)) {
-			expression = buildBindingOperationReference(e);
+		if (referenceType.equals(BINDING_OPERATION_REFERENCE)) {
+			buildBindingOperationReference(e, expression);
 		}
-		if (name.equals(BINDING_MESSAGE_REFERENCE)) {
-			expression = buildBindingMessageReference(e);
+		if (referenceType.equals(BINDING_MESSAGE_REFERENCE)) {
+			buildBindingMessageReference(e, expression);
 		}
-		if (name.equals(BINDING_FAULT_REFERENCE)) {
-			expression = buildBindingFaultReference(e);
+		if (referenceType.equals(BINDING_FAULT_REFERENCE)) {
+			buildBindingFaultReference(e, expression);
 		}
 
 		return expression;
@@ -63,25 +64,59 @@ public class WSDLReferenceDomainExpressionBuilder implements DomainExpressionBui
 		return SUPPORTED_TYPES;
 	}
 
-
-	protected WSDLReferenceDomainExpression buildBindingFaultReference(Element e) {
-		return null;
+	protected void buildBindingFaultReference(Element e, WSDLReferenceDomainExpression expression) {
+		Node n = getFirstNonTextChild(e);
+		if (n == null) {
+			return;
+		}
+		QName serviceName = new QName(n.getNamespaceURI(), n.getLocalName());
+		expression.setBindingFaultReference(serviceName);
 	}
 
-	protected WSDLReferenceDomainExpression buildBindingMessageReference(Element e) {
-		return null;
+	protected void buildBindingMessageReference(Element e, WSDLReferenceDomainExpression expression) {
+		Node n = getFirstNonTextChild(e);
+		if (n == null) {
+			return;
+		}
+		QName serviceName = new QName(n.getNamespaceURI(), n.getLocalName());
+		expression.setBindingMessageReference(serviceName);
 	}
 
-	protected WSDLReferenceDomainExpression buildBindingOperationReference(Element e) {
-		return null;
+	protected void buildBindingOperationReference(Element e, WSDLReferenceDomainExpression expression) {
+		Node n = getFirstNonTextChild(e);
+		if (n == null) {
+			return;
+		}
+		QName serviceName = new QName(n.getNamespaceURI(), n.getLocalName());
+		expression.setBindingOperationReference(serviceName);
 	}
 
-	protected WSDLReferenceDomainExpression buildEndpointReference(Element e) {
-		return null;
+	protected void buildEndpointReference(Element e, WSDLReferenceDomainExpression expression) {
+		Node n = getFirstNonTextChild(e);
+		if (n == null) {
+			return;
+		}
+		QName serviceName = new QName(n.getNamespaceURI(), n.getLocalName());
+		expression.setEndpointReference(serviceName);
 	}
 
-	protected WSDLReferenceDomainExpression buildServiceReference(Element e) {
-		return null;
+	protected void buildServiceReference(Element e, WSDLReferenceDomainExpression expression) {
+		Node n = getFirstNonTextChild(e);
+		if (n == null) {
+			return;
+		}
+		QName serviceName = new QName(n.getNamespaceURI(), n.getLocalName());
+		expression.setServiceReference(serviceName);
 	}
 
+	protected Node getFirstNonTextChild(Node parent) {
+		NodeList children = parent.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (child.getNodeType() == Node.ELEMENT_NODE) {
+				return child;
+			}
+		}
+		return null;
+	}
 }

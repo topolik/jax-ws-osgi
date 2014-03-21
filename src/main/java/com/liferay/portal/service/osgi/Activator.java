@@ -133,7 +133,8 @@ public class Activator implements BundleActivator {
 		jaxWSProps.put("ws-security.callback-handler", new ServiceKeystorePasswordCallback());
 		jaxWSProps.put("ws-security.encryption.properties", "serviceKeystore.properties");
 		jaxWSProps.put("ws-security.signature.properties", "serviceKeystore.properties");
-		jaxWSProps.put("ws-security.encryption.username", "useReqSigCert");
+//		jaxWSProps.put("ws-security.encryption.username", "useReqSigCert");
+		jaxWSProps.put("ws-security.encryption.username", "myservicekey");
 
 	}
 

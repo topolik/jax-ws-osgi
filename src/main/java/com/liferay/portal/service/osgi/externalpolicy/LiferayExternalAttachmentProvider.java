@@ -205,6 +205,9 @@ public class LiferayExternalAttachmentProvider extends AbstractPolicyProvider {
 							p = p.merge(attachment.getPolicy());
 						}
 						attachment.setPolicy(p);
+
+						// cache the element so it can be used when generating the wsdl
+						attachment.setElement((Element) nd);
 					}
 				} // TODO: wsse:Security child element
 			}

@@ -19,6 +19,7 @@ public class ServiceKeystorePasswordCallback implements CallbackHandler {
 
 	public ServiceKeystorePasswordCallback() {
 		passwords.put("myservicekey", "skpass");
+		passwords.put("clientUserNameToken", "clientPassword");
 	}
 
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
