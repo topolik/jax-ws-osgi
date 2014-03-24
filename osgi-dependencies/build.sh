@@ -54,42 +54,55 @@ rm saaj-impl-1.3.bnd
 
 ## OpenSAML 2.5.1
 
-cat > opensaml-2.5.1-1.bnd <<EOF
+mkdir opensaml-merge
+unzip -o openws-1.4.2-1.jar -d opensaml-merge
+unzip -o xmltooling-1.3.2-1.jar -d opensaml-merge
+unzip -o opensaml-2.5.1-1.jar -d opensaml-merge
+
+cd opensaml-merge
+rm META-INF/INDEX.LIST
+rm META-INF/MANIFEST.MF
+
+zip ../opensaml-merge.jar -r *
+cd ..
+rm -r opensaml-merge
+
+cat > opensaml-2.5.1-xmltooling-1.3.2-openws-1.4.2.bnd <<EOF
 -nouses: true
-Export-Package: org.opensaml*;version=2.5.1
+Export-Package: org.opensaml*;version="2.5.1",org.opensaml.xml*;version="1.3.2", org.opensaml.ws*;version="1.4.2",org.opensaml.util*;"version=1.4.2"
 Import-Package: *;resolution:=optional
-Bundle-Version: 2.5.1
-Bundle-Name: OpenSAML library
+Bundle-Version: 1.0.0
+Bundle-Name: OpenSAML + xmltooling + OpenSAML WS libraries bundle
 EOF
 
-java -jar bnd.jar wrap --properties opensaml-2.5.1-1.bnd --output dist/opensaml-2.5.1-1-OSGi.jar opensaml-2.5.1-1.jar
-rm opensaml-2.5.1-1.bnd
-
+java -jar bnd.jar wrap --properties opensaml-2.5.1-xmltooling-1.3.2-openws-1.4.2.bnd --output dist/opensaml-2.5.1-xmltooling-1.3.2-openws-1.4.2-OSGi.jar opensaml-merge.jar
+rm opensaml-2.5.1-xmltooling-1.3.2-openws-1.4.2.bnd
+rm opensaml-merge.jar
 
 ## OpenSAML xmltooling 1.3.2
-cat > xmltooling-1.3.2-1.bnd <<EOF
--nouses: true
-Export-Package: org.opensaml.xml*;version="1.3.2"
-Import-Package: *;resolution:=optional
-Bundle-Version: 1.3.2
-Bundle-Name: OpenSAML xmltooling
-EOF
-
-java -jar bnd.jar wrap --properties xmltooling-1.3.2-1.bnd --output dist/xmltooling-1.3.2-1-OSGi.jar xmltooling-1.3.2-1.jar
-rm xmltooling-1.3.2-1.bnd
+#cat > xmltooling-1.3.2-1.bnd <<EOF
+#-nouses: true
+#Export-Package: org.opensaml.xml*;version="1.3.2"
+#Import-Package: *;resolution:=optional
+#Bundle-Version: 1.3.2
+#Bundle-Name: OpenSAML xmltooling
+#EOF
+#
+#java -jar bnd.jar wrap --properties xmltooling-1.3.2-1.bnd --output dist/xmltooling-1.3.2-1-OSGi.jar xmltooling-1.3.2-1.jar
+#rm xmltooling-1.3.2-1.bnd
 
 
 # OpenSAML WS
-cat > openws-1.4.2-1.bnd <<EOF
-#-nouses: true
-Export-Package: org.opensaml.ws*;version=1.4.2,org.opensaml.util*;version=1.4.2
-Import-Package: *;resolution:=optional
-Bundle-Version: 1.4.2
-Bundle-Name: OpenSAML WS
-EOF
-
-java -jar bnd.jar wrap --properties openws-1.4.2-1.bnd --output dist/openws-1.4.2-1-OSGi.jar openws-1.4.2-1.jar
-rm openws-1.4.2-1.bnd
+#cat > openws-1.4.2-1.bnd <<EOF
+##-nouses: true
+#Export-Package: org.opensaml.ws*;version=1.4.2,org.opensaml.util*;version=1.4.2
+#Import-Package: *;resolution:=optional
+#Bundle-Version: 1.4.2
+#Bundle-Name: OpenSAML WS
+#EOF
+#
+#java -jar bnd.jar wrap --properties openws-1.4.2-1.bnd --output dist/openws-1.4.2-1-OSGi.jar openws-1.4.2-1.jar
+#rm openws-1.4.2-1.bnd
 
 
 # commons logging 
